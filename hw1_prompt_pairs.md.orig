@@ -1,0 +1,516 @@
+# HW1: Prompt Pairs
+
+**Weight:** 5% of final grade
+**Due:** Monday, October 5, 2026, 11:59 PM (Pacific)
+**Tool:** Claude web (claude.ai)
+
+---
+
+## Objective
+
+Current Claude models do well with ordinary prompts, so "getting working output" is no longer the hard part. The hard part is saying precisely what you want and showing, with evidence, that a prompt change actually helped.
+
+In this assignment you write bad/better prompt pairs, define success before you run anything, and then check whether the better prompt really wins. You will reuse this skill later in the course:
+
+- Defining "done" before generating is test-first thinking (HW4, TDD)
+- Scoring outputs against a checklist is how evals and LLM-as-judge work (Weeks 10 and 13)
+
+## Advice That Holds vs. Advice You Should Test
+
+Anthropic's current guide, [Prompting best practices](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview), covers today's Claude models. Some advice is stable across them. Some depends on the model, and Anthropic says to re-check model-specific tips against your own evaluations.
+
+| Stable across current models | Model-dependent: test it yourself |
+|---|---|
+| **Be clear and direct:** treat Claude like "a brilliant but new employee who lacks context" | **"Think step by step."** The guide notes that a short instruction like "think thoroughly" often beats a hand-written step-by-step plan. For Claude Opus 5.5, it suggests removing "think carefully" instructions from chat system prompts, because the model decides for itself how much to think |
+| **Explain why** you want something, not just what | **"Double-check your answer."** The guide says asking Claude to verify its answer against test criteria catches errors reliably, but calls out Claude Opus 5 as an exception: there, such instructions can cause over-verification |
+| **Give 3-5 examples** of the output you want | **Aggressive emphasis** ("CRITICAL: You MUST..."). For tool and skill triggering, the guide notes Claude Opus 4.5 and 4.6 may now overtrigger on it and advises "more normal prompting" |
+| **Say what to do**, not only what not to do | **Persona prompts** ("You are a senior FAANG engineer..."). Useful for setting tone and focus; whether they improve correctness for your task is an open question |
+
+### How this connects to Week 3
+
+Breaking a task into explicit steps ("first list the requirements, then...") is still useful. What's less certain on current models is the magic phrase "think step by step", because the model already reasons on its own. So instead of taking a rule on faith, you'll test one of these techniques yourself (see Myth test below).
+
+---
+
+## Before You Start: Setup (Required)
+
+Your runs must be comparable and shareable:
+
+1. **Use regular chats**, outside any Project. Don't use incognito chats: they aren't saved to your history and can't be reopened once closed, and in the new Claude experience they can't run code.
+2. **Isolate each run.** In Settings, pause memory, turn off chat search/reference, and clear any profile preferences or custom styles, so earlier chats don't leak into your runs. Turn them back on when you're done.
+3. **Hold the setup constant.** Record your plan, model, effort level, and thinking setting. On the newest models thinking can't be turned off; record it as "always on". Keep all of these the same for every run.
+4. **Paste inputs into the prompt;** don't attach files. Shared links don't include attachments.
+5. **Pace yourself.** Usage limits vary by plan (on Pro they reset every five hours, plus a weekly limit), so spread your runs over at least two days.
+
+---
+
+## Task
+
+Create three prompt pairs, one for each task type below. You choose the concrete task. Ideally, take it from your Project 1.
+
+| # | Task type | Example (don't copy; pick your own) |
+|---|---|---|
+| 1 | **Generate** — code or a UI component | A form component with validation for your P1 |
+| 2 | **Extract** — messy text → structured output | Turn a course syllabus into a list of deadlines |
+| 3 | **Critique** — review something and find problems | Review a piece of code or your P1 PRD. Plant 3-4 known defects in it first, so your checklist can include "finds defect X" |
+
+### For each pair
+
+1. **Bad prompt.** This must be realistic: something you'd actually type, or a prompt taken from your own chat history. Straw men ("make an app") lose points.
+
+2. **Checklist**, written BEFORE you run anything. Write 4-6 pass/fail items that define a good result.
+   - At least half must check correctness or judgment, not format. Good examples: "invents no dates", "finds the planted off-by-one", "rejects an empty email".
+   - Avoid items that only reward the better prompt for echoing its own wording. Example: if only your better prompt asks for JSON, "outputs JSON" is a rigged item.
+   - The checklist is frozen once you've seen any output.
+
+3. **Better prompt.** Improve the bad prompt. In 2-4 sentences, explain why it should win: name the principle and link to where Anthropic's guide describes it.
+
+4. **Prediction.** Before running, write down the average score you expect for each prompt.
+
+5. **Evidence.** Run each prompt 3 times, each in a fresh chat. Score every run and share every chat link.
+
+   | Prompt | Run 1 | Run 2 | Run 3 | Average |
+   |--------|-------|-------|-------|---------|
+   | Bad    | 2/6   | 3/6   | 2/6   | 2.3/6   |
+   | Better | 6/6   | 5/6   | 6/6   | 5.7/6   |
+
+   Also report how many runs passed each checklist item. That shows which failures the better prompt fixed.
+
+6. **Error analysis.**
+   - Quote one failing passage from a bad-prompt run and one from a better-prompt run.
+   - Name each failure's category (e.g., missing context, taken too literally, invented facts, ignored a constraint, too verbose).
+   - Did any failure slip past your checklist? Name one item you now wish you'd included. You may not add it to your scores.
+
+7. **Verdict.** Was the better prompt actually better? Compare the result to your prediction.
+
+   > With 3 runs, a gap smaller than 1 checklist item is noise. Call it "no clear difference". An honest "no difference" earns more credit than an unsupported "it's better".
+
+---
+
+## Myth Test (in one of your three pairs)
+
+Pick one technique from the "test it yourself" column: "think step by step", "double-check your answer", aggressive CRITICAL/MUST emphasis, or a persona.
+
+1. Add the technique to your better prompt, changing nothing else.
+2. Run that version 3 more times against the same checklist.
+3. Report whether the technique helped, hurt, or made no clear difference on your model.
+
+Test the phrase, not a visible explanation. Add the words themselves, e.g. "think step by step". Don't ask Claude to write out its reasoning in the answer: on Claude Opus 5.5, Anthropic notes such requests can be declined.
+
+> A negative result earns full credit. What we grade is a fair setup and an honest conclusion.
+
+---
+
+## Deliverables
+
+Submit one PDF or Markdown document to Canvas containing:
+
+> **Chat links:** use public share links. If your account can only share within an organization (Team or Enterprise plans), include full-page screenshots of each run instead.
+
+---
+
+### 1. Setup
+
+**1.1** What model are you using?
+
+> Claude Opus 5.5
+
+**1.2** What effort level and thinking setting?
+
+> I'm using a medium effort level and always on thinking.
+
+**1.3** What is your Claude plan (Free / Pro / Team / Enterprise)?
+
+> I have an enterprise premium seat.
+
+---
+
+### 2. Prompt Pair 1: Generate (code or a UI component)
+
+**2.1** Task description — what are you asking Claude to generate?
+
+> While not yet approved, I plan to use claude to search out internship/job listings that match provided criteria, pulling in up to date relavent results to the to-do column of the kanban, and saving results in local storage once they're moved to in process. The current task I'm giving claude is to create two components, the first being a kanban column, and the next being a kanban entry card. I'll have claude render two columns to verify the kanban card can be moved between columns.
+
+**2.2** Bad prompt:
+
+```
+Generate a small react kanban demo with to do and in progress columns, generate dummy data for the card including link to the listing, the job title, company, and location. Avoid ai styling, and include a toggle for what happens in error state, like a failed return of searched jobs. Save cards between reloads.
+```
+
+**2.3** Checklist (4-6 pass/fail items, written BEFORE running anything, at least half testing correctness/judgment):
+
+- [ ] All items must be human testable, so build a toggle for error state
+- [ ] The generated artifact contains two rendered reusable columns, "to do" and in "process", and a sample card is included.
+- [ ] The kanban card contains the job title, company, location, and a link to the listing.
+- [ ] Cards can be moved between the two columns.
+- [ ] A card's position is retained between reloads.
+- [ ] Columns still render if there are no listings or the "fetch" fails.
+
+**2.4** Better prompt:
+
+```
+Think and behave as a senior full stack developer, think thouroughly, and use your thinking to ensure you're writing human readable code. 
+
+Generate an artifact of a react kanban demo that includes todo and in progress columns. 
+
+Do not use a cream or off-white background, italic accent words in headlines, numbered "01/02/03" section labels, monospace labels, or pill-shaped buttons. 
+
+A successful demo is judged by the following characteristics, 
+- All items must be human testable, so build a toggle for error state
+- The generated artifact contains two rendered reusable columns, "to do" and in "process", and a sample card is included.
+- The kanban card contains the job title, company, location, and a link to the listing.
+- Cards can be moved between the two columns.
+- A card's position is retained between reloads.
+- Columns still render if there are no listings or the "fetch" fails. 
+```
+
+**2.5** Why should the better prompt win? (Name the principle and link to Anthropic's guide)
+
+> Frontend design defaults: https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5#frontend-design-defaults
+
+> Thinking capabilities: https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#leverage-thinking-and-interleaved-thinking-capabilities
+
+> Be clear and direct: https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#be-clear-and-direct
+
+**2.6** Prediction — what average score do you expect for each prompt?
+
+- Bad prompt predicted average: 4/6
+- Better prompt predicted average: 6/6
+
+**2.7** Score table:
+
+| Prompt | Run 1 | Run 2 | Run 3 | Average |
+|--------|-------|-------|-------|---------|
+| Bad    |   6    |   6    |    6   |    6     |
+| Better |   6    |   6    |    6   |     6    |
+
+**2.8** Per-item table — how many runs (out of 3) passed each checklist item?
+
+| Checklist item | Bad prompt (x/3) | Better prompt (x/3) |
+|----------------|------------------|---------------------|
+| All items must be human testable, so build a toggle for error state | 3/3              | 3/3                 |
+| The generated artifact contains two rendered reusable columns, "to do" and in "process", and a sample card is included. | 3/3              | 3/3                 |
+| The kanban card contains the job title, company, location, and a link to the listing. | 3/3              | 3/3                 |
+| Cards can be moved between the two columns. | 3/3              | 3/3                 |
+| A card's position is retained between reloads. | 3/3              | 3/3                 |
+| Columns still render if there are no listings or the "fetch" fails. | 3/3              | 3/3                 |
+
+**2.9** Chat links:
+
+- Bad Run 1: https://claude.ai/artifact/PvGa7vZ8gPcZMJNtd1S7j5
+    ![run 1](image.png)
+- Bad Run 2: https://claude.ai/artifact/DHco2JyPw6HzCzoRXZihRS
+    ![run 2](image-1.png)
+- Bad Run 3: https://claude.ai/artifact/3oy2iqpryMCg4U5CMop9pe
+    ![run 3](image-2.png)
+- Better Run 1: https://claude.ai/artifact/5H8sqNNN7c6A2PfXTR7zJF
+    ![run 4](image-3.png)
+- Better Run 2: https://claude.ai/artifact/1gAFJKhujBwt1PTVdCuN6V
+    ![run 5](image-4.png)
+- Better Run 3: https://claude.ai/artifact/A5niph9wA4m86Ktkyo4ZHo
+    ![run 6](image-5.png)
+
+**2.10** Error analysis — quote one failing passage from a bad-prompt run and one from a better-prompt run. Name each failure's category.
+
+> Bad prompt failure (category: n/a):
+> I don't see any failures in regards to the rubric, however the bad prompt is styled significantly worse.
+
+
+> Better prompt failure (category: n/a):
+> I don't see any failures in these runs in the context of the rubric.
+>
+
+**2.11** Did any failure slip past your checklist? Name one item you wish you'd included.
+
+> I wish I'd included something measureable for styling, potentially a style guide for it to adhere to. Both prompts, even while following prompting guidance, have an ai "smell" on them that neither the suggested prompting nor the "avoid ai" styling was able to get rid of.
+
+**2.12** Verdict — was the better prompt actually better? How does this compare to your prediction?
+
+> The "better prompt" didn't seem better in the context of the rubric, but it did end up creating a more aesthetically pleasing artifact. While there are a ton of factors involved, I think a stronger more targeted rubric could show a larger difference between the two. Specifically, the "bad" runs built artifacts that did attempt to avoid standard AI styling, but it gives itself away via dark mode; that being said it did rely on an older very simple square style of site, something like craigslist, or the github projects kanban. I think my instructions in the bad prompt were too direct to be poorly understood, as even though it wasn't an explicit detailed list, I built a prompt that gave it the tools needed to meet each item in the prompt. Explicitly providing the list of success criteria didn't help much in the output (outside of styling), but it did make it easier to write and compare against output. Providing claude a role may have also
+
+---
+
+### 3. Prompt Pair 2: Extract (messy text → structured output)
+
+**3.1** Task description — what are you asking Claude to extract, and from what?
+
+> I'm asking claude to extract job postings as json from the hacker news "who's hiring" thread. It's forum/reddit style and incluudes user responses/comments, the october thread can be found here: https://news.ycombinator.com/item?id=49922569, but the text provided to the llm is a smaller subset in [hacker_news_sample_data.md](./hacker_news_sample_data.md). It's a messy copy paste including forum ui elements, reply buttons, comments, etc.
+
+**3.2** Bad prompt:
+
+```
+Extract the job listings from this forum copy/paste and give them to me in json so an app can consume it. Make it an artifact. \*Data set is copy/pasted here, leaving out of document for readability\*
+```
+
+**3.3** Checklist (4-6 pass/fail items, written BEFORE running anything, at least half testing correctness/judgment):
+
+- [ ] Only job postings in the thread are returned in json, non-job listing replies are ignored. Returned json must not include ui/forum elements, only job information.
+- [ ] Returned json is accurate to the information listed in the job posting including title, company, location outside link if included in posting. Additional role information is not included.
+- [ ] No hallucinated roles are included
+- [ ] Missing information is listed as "null" not skipped.
+
+**3.4** Better prompt:
+
+```
+\*Data set is copy/pasted here, leaving out of document for readability\*
+
+Sort the pasted thread above into a list of posted jobs, return the list as json including title, company, location, and a link to the role if included, use these keys:
+    {   
+        "title": string/null,
+        "company": string/null,
+        "location: string/null,
+        "link": string/null
+    }
+
+ List missing information as null and do not skip it. 
+
+Do not include any content from non-top level replies unless it's an additional job listing.
+
+```
+
+**3.5** Why should the better prompt win? (Name the principle and link to Anthropic's guide)
+
+> This better prompt should win for two major reasons, it uses an explicit json example, and is also significantly more direct in regards to what information the returned json should return.
+
+> https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#use-examples-effectively
+> https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#be-clear-and-direct
+
+**3.6** Prediction — what average score do you expect for each prompt?
+
+- Bad prompt predicted average: 3/4
+- Better prompt predicted average: 4/4
+
+**3.7** Score table:
+
+| Prompt | Run 1 | Run 2 | Run 3 | Average |
+|--------|-------|-------|-------|---------|
+| Bad    |   1/4    |    0/4   | 1/4      | 0.67/4        |
+| Better |   4/4    | 4/4     | 4/4      |4/4       |
+
+**3.8** Per-item table — how many runs (out of 3) passed each checklist item?
+
+| Checklist item | Bad prompt (x/3) | Better prompt (x/3) |
+|----------------|------------------|---------------------|
+| Only job postings in the thread are returned in json, non-job listing replies are ignored. Returned json must not include ui/forum elements, only job information. |       0/3           |        3/3             |
+| Returned json is accurate to the information listed in the job posting including title, company, location outside link if included in posting. Additional role information is not included. |                0/3  | 3/3                    |
+| No hallucinated roles are included |              0/3    |            3/3         |
+| Missing information is listed as "null" not skipped. |          2/3        |             3/3        |
+
+**3.9** Chat links:
+
+- Bad Run 1: https://claude.ai/artifacts/latest/f09731de-b789-4e32-9670-45eb93bacaff
+- Bad Run 2: https://claude.ai/artifacts/latest/94f8d116-1022-4c7d-9050-705e231d3cef
+- Bad Run 3: https://claude.ai/artifacts/latest/fa4ac4b4-014a-48a8-85f7-2fe1a6cfa790
+- Better Run 1: https://claude.ai/share/a99f0108-4e36-44fd-867d-3a0d97b2110b
+- Better Run 2: https://claude.ai/share/88f38eda-085e-4a18-9dff-f7062de65c2f
+- Better Run 3: https://claude.ai/share/972ffa87-4375-4e8e-8c04-f3b9ba664027 
+
+**3.10** Error analysis — quote one failing passage from a bad-prompt run and one from a better-prompt run. Name each failure's category.
+
+> Bad prompt failure (category: Major formatting failure, additional unrequested info is included):
+> 
+>
+
+```json {
+      "id": 1,
+      "company": "MaFi Games",
+      "poster": "iliketrains",
+      "posted": "28 minutes ago",
+      "company_url": "https://www.captain-of-industry.com",
+      "description": "Indie studio behind the factory simulation game Captain of Industry. Looking for experienced engineers with strong CS fundamentals (simulation, 3D graphics, performance).",
+      "roles": [
+        {
+          "title": "Senior Software Engineer / Game Developer",
+          "location": null,
+          "url": "https://coigame.com/jobs-swe-hn"
+        },
+        {
+          "title": "2D Game Asset Artist",
+          "location": null,
+          "url": null
+        },
+        {
+          "title": "3D Game Asset Artist",
+          "location": null,
+          "url": null
+        }
+      ],
+      "locations": [],
+      "remote": "full",
+      "remote_regions": [],
+      "employment_type": [
+        "contract",
+        "full-time"
+      ],
+      "compensation": null,
+      "tech_stack": [
+        "C#"
+      ],
+      "visa_sponsorship": null,
+      "apply_url": "https://coigame.com/jobs-swe-hn",
+      "contact_email": null,
+      "notes": "Contract preferred; long-term, full-time collaboration."
+    },
+```
+
+> Better prompt failure (category: ):
+> The better prompt is much more specific regarding the requested output, based on the more detailed prompt, I haven't been able to find any mismatches with the requested format or included information.
+>
+
+**3.11** Did any failure slip past your checklist? Name one item you wish you'd included.
+
+> I wish I'd included further grading on the structure of the returned object, not just the included keys, as the poor run returned a deeply nested group of objects which would be annoying to work with. I much preferred the flat structure returned by the better prompt, as it's much easier to have an app consume.
+
+**3.12** Verdict — was the better prompt actually better? How does this compare to your prediction?
+
+> The results line up well with my prediction, with the better prompt returning a much cleaner and more accurate group of objects.
+
+---
+
+### 4. Prompt Pair 3: Critique (review something and find problems)
+
+**4.1** Task description — what are you asking Claude to critique? What defects did you plant?
+
+> I've taken the following article from neu news: https://news.northeastern.edu/2026/10/05/oakland-illegal-dumping-prevention/ and have added several typos and logical inconsistencies. I'll be posing as an article writer asking claude for help fixing the issues and asking for an error report
+
+**4.2** Bad prompt:
+
+```
+Can you please read this article I'm writing and edit for spelling, logical inconsistencies, etc.
+
+\* Pasted article content here*\
+```
+
+**4.3** Checklist (4-6 pass/fail items, written BEFORE running anything, at least half testing correctness/judgment):
+
+- [ ] All four typos are caught and raised: divrese, stationery, itterations, highest-frequncy
+- [ ] Claude catches that five students are named, but later the article refers a four person team.
+- [ ] Claude catches Pranav Kishore's last name is changed to Guerra
+- [ ] Claude catches Camera footage is unavailable, but later the dashboard section claims to use live fotage from that camera footage.
+- [ ] Claude provides an error summary/report at the end of the response.
+
+**4.4** Better prompt:
+
+```
+I am preparing the below draft to be published online. Review this draft, copyediting and checking for internal consistency.
+
+Be sure to check for: Spelling and incorrect words, inconsistency in names, numbers, count, and general logic, any contradiction, and other errors that can be determined from reading the draft.
+
+Once complete, provide a full error/report and summary.
+ \* Pasted content here*\
+```
+
+**4.5** Why should the better prompt win? (Name the principle and link to Anthropic's guide)
+
+>The prompt follows “Add context to improve performance” (https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#add-context-to-improve-performance) by explaining that the draft is being reviewed before publication, and by being direct, providing specifics for error targeting.
+
+**4.6** Prediction — what average score do you expect for each prompt?
+
+- Bad prompt predicted average: 2/5
+- Better prompt predicted average: 4/5
+
+**4.7** Score table:
+
+| Prompt | Run 1 | Run 2 | Run 3 | Average |
+|--------|-------|-------|-------|---------|
+| Bad    |       |       |       |         |
+| Better |       |       |       |         |
+
+**4.8** Per-item table — how many runs (out of 3) passed each checklist item?
+
+| Checklist item | Bad prompt (x/3) | Better prompt (x/3) |
+|----------------|------------------|---------------------|
+| All four typos are caught and raised: divrese, stationery, itterations, highest-frequncy | 3/3 | |
+| Claude catches that five students are named, but later the article refers a four person team. | 3/3 | |
+| Claude catches Pranav Kishore's last name is changed to Guerra | 3/3 | |
+| Claude catches Camera footage is unavailable, but later the dashboard section claims to use live fotage from that camera footage. | 3/3 | |
+| Claude provides an error summary/report at the end of the response. | 0/3 | |
+
+**4.9** Chat links:
+
+- Bad Run 1: https://claude.ai/share/1d862cec-f13c-4e17-b56a-de5621d7ce89
+- Bad Run 2: https://claude.ai/share/5fbedcc0-cb7e-4bac-ae18-104f1dd6f65d
+- Bad Run 3: https://claude.ai/share/a5fe5226-28d0-4352-ad1c-1d53221d1fd9
+- Better Run 1:
+- Better Run 2:
+- Better Run 3:
+
+**4.10** Error analysis — quote one failing passage from a bad-prompt run and one from a better-prompt run. Name each failure's category.
+
+> Bad prompt failure (category: ):
+>
+>
+
+> Better prompt failure (category: ):
+>
+>
+
+**4.11** Did any failure slip past your checklist? Name one item you wish you'd included.
+
+>
+
+**4.12** Verdict — was the better prompt actually better? How does this compare to your prediction?
+
+>
+
+---
+
+### 5. Myth Test
+
+**5.1** Which pair did you apply the myth test to? (Pair 1, 2, or 3)
+
+>
+
+**5.2** Which technique did you test? ("think step by step" / "double-check your answer" / aggressive CRITICAL/MUST emphasis / a persona)
+
+>
+
+**5.3** What exact text did you add to the better prompt?
+
+>
+
+**5.4** Score table (myth test version, 3 runs):
+
+| Prompt | Run 1 | Run 2 | Run 3 | Average |
+|--------|-------|-------|-------|---------|
+| Better + technique |       |       |       |         |
+
+(Compare against better prompt average from the pair above)
+
+**5.5** Chat links:
+
+- Myth Run 1:
+- Myth Run 2:
+- Myth Run 3:
+
+**5.6** Conclusion — did the technique help, hurt, or make no clear difference?
+
+>
+
+---
+
+### 6. Reflection (~300 words)
+
+**6.1** What makes a prompt better for the model you used?
+
+>
+
+**6.2** What surprised you? What would you change about your checklists?
+
+>
+
+**6.3** Cite at least two specific numbers or quotes from your own runs.
+
+>
+
+---
+
+### 7. Personal Prompt Template
+
+**7.1** Write a reusable prompt template you'd actually use for P1. Include a one-line note on each section explaining why it's there.
+
+```
+
+```
+
+---
